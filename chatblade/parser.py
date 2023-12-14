@@ -18,6 +18,15 @@ def get_openai_key(options):
         return os.environ["OPENAI_API_KEY"]
     else:
         return None
+    
+
+def get_openai_base_url(options):
+    if options["openai_base_url"]:
+        return options["openai_base_url"]
+    elif "OPENAI_BASE_URL" in os.environ:
+        return os.environ["OPENAI_BASE_URL"]
+    else:
+        return None
 
 
 model_mappings = {
@@ -70,6 +79,7 @@ def extract_query(query):
 def extract_options(options):
     options = vars(options)  # to map
     options["openai_api_key"] = get_openai_key(options)
+    options["openai_base_url"] = get_openai_base_url(options)
     options["theme"] = get_theme(options)
     options["model"] = get_openai_model(options)
     del options["query"]
@@ -109,6 +119,12 @@ def parse(args):
         metavar="key",
         type=str,
         help="the OpenAI API key can also be set as env variable OPENAI_API_KEY",
+    )
+    parser.add_argument(
+        "--openai-base-url",
+        metavar="key",
+        type=str,
+        help="the OpenAI base url can also be set as env variable OPENAI_BASE_URL",
     )
     parser.add_argument(
         "--temperature",
